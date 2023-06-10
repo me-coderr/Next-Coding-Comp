@@ -1,0 +1,84 @@
+
+*{
+    color: white;
+}
+
+body{
+    background-color: black;
+}
+
+nav{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    padding: 5px;
+    margin-top: 30px;
+    font-size: 15px;
+}
+
+nav div{
+    margin: 10px;
+    padding: 10px;
+}
+
+nav p{
+    display: inline;
+    color: orangered;
+}
+
+nav div:hover{
+    color: rgba(255, 255, 255, 0.485);
+    cursor: pointer;
+    box-shadow: 2px 2px 30px grey;
+}
+
+nav div:active{
+    background-color: yellow;
+}
+
+header{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    padding: 5px;
+}
+
+header h1{
+    color: orangered;
+    font-size: 100px;
+    margin: 0;
+}
+
+header h3{
+    font-size: 20px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.485);
+    font-weight: 500;
+}
+
+footer{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 10px;
+}
+
+footer .pageMover{
+    padding: 20px;
+    border-radius: 100%;
+    background-color: orangered;
+    margin: 15px;
+    font-size: 30px;
+    font-weight: 900;
+}
+
+footer .pageMover:hover{
+    background-color: rgba(255, 145, 0, 0.856);
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.485);
+    box-shadow: 2px 2px 30px 5px grey;
+}

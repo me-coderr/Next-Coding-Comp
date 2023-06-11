@@ -95,7 +95,7 @@ let create_appendCard = (dataObj, row) =>
     name.innerText=dataObj.name;
 
     let start = document.createElement("div");
-    start.setAttribute("class", "start-time");
+    start.setAttribute("class", "start");
     start.innerHTML=`Date : ${dataObj.start_time.slice(0, 10)}<br>Time : ${dataObj.start_time.slice(11, 16)}`;
 
     let link = document.createElement("a");
@@ -105,12 +105,10 @@ let create_appendCard = (dataObj, row) =>
     siteName.setAttribute("class", "siteName");
     siteName.innerText = `${dataObj.site}`;
 
-    if()
-
     let button = document.createElement("button");
     button.setAttribute("type", "button");
     button.setAttribute("class", "goto-button");
-    button.innerText = `${dataObj.site}`;
+    button.innerText = `Register Here →`;
 
     link.appendChild(button);
     imgContainer.appendChild(img);
@@ -122,6 +120,58 @@ let create_appendCard = (dataObj, row) =>
     card.appendChild(link);
 
     row.appendChild(card);
+
+    let site = dataObj.site;
+
+    // if(site == "CodeForces" || site == "CodeForces::Gym" || site == "TopCoder" || site == "AtCoder" || site == "CS Academy" || site == "CodeChef" || site == "HackerRank" || site == "HackerEarth" || site == "LeetCode" || site == "Toph")
+
+    switch(site)
+    {
+        
+        case "CodeForces" : 
+            siteName.parentElement.style.backgroundColor = "lightgray";
+            break;
+
+        case "CodeForces::Gym" : 
+            siteName.parentElement.style.backgroundColor = "paleblue";
+            break;
+
+        case "CodeForces" : 
+            siteName.parentElement.style.backgroundColor = "mintgreen";
+            break;
+
+        case "TopCoder" : 
+            siteName.parentElement.style.backgroundColor = "beige";
+            break;
+
+        case "AtCoder" : 
+            siteName.parentElement.style.backgroundColor = "lightyellow";
+            break;
+
+        case "CS Academy" : 
+            siteName.parentElement.style.backgroundColor = "lightpink";
+            break;
+
+        case "CodeChef" : 
+            siteName.parentElement.style.backgroundColor = "lightcoral";
+            break;
+
+        case "HackerRank" : 
+            siteName.parentElement.style.backgroundColor = "lavender";
+            break;
+
+        case "HackerEarth" : 
+            siteName.parentElement.style.backgroundColor = "palegreen";
+            break;
+
+        case "LeetCode" : 
+            siteName.parentElement.style.backgroundColor = "lightskyblue";
+            break;
+        
+        case "Toph" : 
+            siteName.parentElement.style.backgroundColor = "softpeach";
+            break;
+    }
 
     return card;
 }
@@ -215,14 +265,23 @@ let setPage = (footer, atPage) =>
         return;
     }
 
-    if(atPage < 1)
+    if(atPage < 1)                 // gives circular scrolling effect
     {
-        return 1;
+        atPage = lastPageNum;
     }
     else if(atPage > lastPageNum)
     {
-        return lastPageNum;
+        atPage = 1;
     }
+    
+    // if(atPage < 1)              // prevents page backward turn when at first page
+    // {                           // prevents page forward turn when at last page
+    //     return 1;
+    // }
+    // else if(atPage > lastPageNum)
+    // {
+    //     return lastPageNum;
+    // }
 
     pageNumBox.innerText = `Page ${atPage}`;
 
@@ -270,7 +329,7 @@ let execute_main = async () =>
         atPage = setPage(footer, ++atPage);
     });
 
-    console.log(data[0])
+    console.log(data);
 }
 
 execute_main();

@@ -1,10 +1,8 @@
 
 /**
  * to update :
- * create a new card-container after every 12 cards.
- * the card-container will have display:none feature
- * every card-container will have only 4 rows, indexed : row-0, row-1, row-2, row-3
- * and 12 cards indexed card-0-0 ... card-1-3... card-2-6... card-3-9... card-3-11
+ * update the design on cards and buttons with box shadows and eventListeners and stuff
+ * make filters functioning
  */
 
 let APIurl = "https://kontests.net/api/v1/all";

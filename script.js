@@ -109,7 +109,7 @@ let select_createRow = () =>
     let box = document.getElementById("card-box")
     let rowList = box.getElementsByClassName("card-row");
     
-    if(cardNum % 3 === 0 && cardNum/3 > rowNum % 4)
+    if(cardNum % 3 === 0)
     {
         row = create_appendRow(box);
     }

@@ -8,7 +8,7 @@
  */
 
 let cardNum = 0;
-let rowNum = -1;
+let rowNum = 0;
 let pageNum = 0;
 
 let replaceAlert = (text) => {
@@ -80,38 +80,35 @@ let create_appendCard = (dataObj, row) =>
     let card = document.createElement("div");
     card.setAttribute("class", "card");
     card.setAttribute("id", `card-${rowNum % 4}-${cardNum++ % 3}`);
-    card.innerText=`==${cardNum-1} ${rowNum}==`;
-    card.style.padding="5px";
+    // card.innerText=`==${cardNum-1} ${rowNum}==`;
+    // card.style.padding="5px";
 
     row.appendChild(card);
 
     return card;
 }
 
-let create_appendRow = (box) =>
+let create_appendRow = (page) =>
 {
     let cardRow = document.createElement("div");
     cardRow.setAttribute("class", "card-row");
-    cardRow.setAttribute("id", `row-${++rowNum}`);
-    cardRow.style.display="flex";
-    cardRow.style.flexDirection="row";
+    cardRow.setAttribute("id", `row-${rowNum++}`);
+    // cardRow.style.display="flex";
+    // cardRow.style.flexDirection="row";
 
-
-    box.appendChild(cardRow);
+    page.appendChild(cardRow);
 
     return cardRow;
 }
 
-let select_createRow = () => 
+let select_createRow = (page) => 
 {
     let row;
-
-    let box = document.getElementById("card-box")
-    let rowList = box.getElementsByClassName("card-row");
+    let rowList = page.getElementsByClassName("card-row");
     
     if(cardNum % 3 === 0 && cardNum/3 > rowNum % 4)
     {
-        row = create_appendRow(box);
+        row = create_appendRow(page);
     }
     else
     {
@@ -121,9 +118,30 @@ let select_createRow = () =>
     return row;
 }
 
+let create_appendPage = (box) =>
+{
+    let page = document.createElement("div");
+    div.setAttribute("class", "page");
+    div.setAttribute("id", `page-${pageNum++}`);
+}
+
+let select_createPage = (box) =>
+{
+    let page;
+
+    if(cardNum === 12)
+    {
+        cardNum = 0;
+        rowNum = 0;
+
+        page = create_appendPage(box);
+    }
+}
+
 let run = async () => 
 {
     const data = await recieveData();
+    let box = document.getElementById("card-box");
     let card;
     let row;
     let page;
@@ -135,8 +153,8 @@ let run = async () =>
             continue;
         }
 
-
-        row = select_createRow();
+        page = select_createPage(box);
+        row = select_createRow(page);
         card = create_appendCard(data[i], row);
 
     }

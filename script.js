@@ -1,7 +1,6 @@
 
 /**
  * to update :
- * update the design on cards and buttons with box shadows and eventListeners and stuff
  * make filters functioning
  * nav bar converted to a filter menu emerging from the left side via a button
  */

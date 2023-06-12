@@ -102,7 +102,6 @@ main{
     align-items: center;
     justify-content: center;
     width: 60%;
-    overflow: hidden;
 }
 
 .page{
@@ -131,7 +130,13 @@ main{
     border-radius: 8px;
     align-items: center;
     justify-content: flex-start;
+}
 
+.card:hover{
+    box-shadow: 4px 4px 50px rgb(81, 80, 80);
+    transform: scale(1.1, 1.1);
+    -ms-transform: scale(1.1, 1.1); /* IE 9 */
+    -webkit-transform: scale(1.1, 1.1);
 }
 
 .img-container{
@@ -192,6 +197,14 @@ main{
     margin-top: 35px;
     text-align: center;
     width: 140px;
+}
+
+.goto-button:hover{
+    cursor: pointer;
+    box-shadow: 2px 2px 30px grey;
+    transform: scale(1.1, 1.1);
+    -ms-transform: scale(1.1, 1.1); /* IE 9 */
+    -webkit-transform: scale(1.1, 1.1);
 }
 
 footer{

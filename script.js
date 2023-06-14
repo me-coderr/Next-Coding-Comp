@@ -112,7 +112,7 @@ let create_appendCard = (dataObj, row, filterClicked) =>
     linkButton.setAttribute("href", `${dataObj.url}`);
     linkButton.setAttribute("target", `_blank`);
     linkButton.setAttribute("rel", `noopener noreferrer`);
-
+  
     let button = document.createElement("button");
     button.setAttribute("type", "button");
     button.setAttribute("class", "goto-button");

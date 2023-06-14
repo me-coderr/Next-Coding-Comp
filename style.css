@@ -6,6 +6,7 @@
 
 body{
     background-color: black;
+    position: relative;
 }
 
 nav{
@@ -19,7 +20,7 @@ nav{
     font-size: 15px;
 }
 
-nav div{
+.filterType{
     margin: 10px;
     padding: 10px;
     border-radius: 5px;
@@ -30,14 +31,16 @@ nav p{
     color: orangered;
 }
 
-nav div:hover{
+.filterType:hover{
     color: rgba(255, 255, 255, 0.485);
     cursor: pointer;
     box-shadow: 2px 2px 30px grey;
+    transform: scale(1.1, 1.1);
 }
 
-nav div:active{
+.filterType:active{
     box-shadow: none;
+
 }
 
 header{
@@ -85,15 +88,26 @@ main{
 }
 
 .filter{
-    padding: 5px 15px;
+    padding: 6px 15px;
     background-color: orangered;
     border-radius: 20px;
     margin-left: 5px;
+    display: flex;
+    flex-direction: row;
+}
+
+.filter p{
+    margin: 0;
+    margin-right: 10px;
 }
 
 .cancelFilter{
-    /* padding: 5px; */
     all: unset;
+}
+
+.cancelFilter:hover{
+    color: black;
+    transform: scale(1.5, 1.5);
 }
 
 .cardContainer{
@@ -102,7 +116,6 @@ main{
     align-items: center;
     justify-content: center;
     width: 60%;
-    overflow: hidden;
 }
 
 .page{
@@ -120,18 +133,20 @@ main{
 
 .card{
     width: 29.5%;
-    /* height: 350px; */
     padding: 5px;
     padding-top: 0;
     display: flex;
     flex-direction: column;
     border: 1px solid rgba(255, 255, 255, 0.485);
     margin: 10px;
-    background-color: rgba(64, 224, 208, 0.605);
     border-radius: 8px;
     align-items: center;
     justify-content: flex-start;
+}
 
+.card:hover{
+    box-shadow: 4px 4px 50px rgb(81, 80, 80);
+    transform: scale(1.1, 1.1);
 }
 
 .img-container{
@@ -167,7 +182,7 @@ main{
     line-height: 35px;
     align-self: flex-start;
     font-weight: 700;
-    color: gray;
+    color: brown;
 }
 
 .siteName{
@@ -194,6 +209,12 @@ main{
     width: 140px;
 }
 
+.goto-button:hover{
+    cursor: pointer;
+    box-shadow: 2px 2px 30px grey;
+    transform: scale(1.1, 1.1);
+}
+
 footer{
     display: flex;
     flex-direction: row;
@@ -205,21 +226,20 @@ footer{
 footer .pageMover{
     padding: 20px;
     border-radius: 100%;
-    /* background-color: orangered; */
     margin: 15px;
     font-size: 30px;
     font-weight: 900;
 }
 
 footer .pageMover:hover{
-    background-color: rgba(128, 128, 128, 0.359);
     cursor: pointer;
     color: rgba(255, 255, 255, 0.485);
-    box-shadow: 2px 2px 30px 5px grey;
+    transform: scale(1.5, 1.5);
 }
 
 footer .pageMover:active{
     box-shadow: none;
+    transform: scale(1, 1);
 }
 
 
@@ -227,17 +247,25 @@ footer .pageMover:active{
 
 
 
+/* .alertContainer{
+    height: 100vh;
+    width: 100%;
+    background: radial-gradient(circle, #030303, #f7f6f6);
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.2;
+    z-index: 99999;
+} */
 
 
 body .alert{
     width: 30%;
     height: 20%;
-    /* padding: 20px; */
-    background-color: brown;
-    /* border: 1px solid black; */
+    background-color: rgb(211, 28, 28);
     border-radius: 15px;
     position: absolute;
-    top: 50%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
     box-shadow: 2px 2px 30px 5px grey;

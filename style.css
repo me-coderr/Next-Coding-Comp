@@ -258,10 +258,9 @@ footer .pageMover:active{
     z-index: 99999;
 } */
 
-
 body .alert{
     width: 30%;
-    height: 20%;
+    height: 150px;
     background-color: rgb(211, 28, 28);
     border-radius: 15px;
     position: absolute;

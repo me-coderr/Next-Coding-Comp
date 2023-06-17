@@ -52,8 +52,8 @@ let replaceAlert = (text) => {
 
 let displayErrorMessage = async (err) => 
 {
-    let displayBox = document.getElementsByClassName("sectionName")[0];
-    displayBox.innerText = `:(`;
+    // let displayBox = document.getElementsByClassName("sectionName")[0];
+    // displayBox.innerText = `:(`;
     await replaceAlert(err);
 }
 
@@ -121,6 +121,11 @@ let create_appendCard = (dataObj, row, filterClicked) =>
     button.setAttribute("class", "goto-button");
     button.innerText = `Register Here →`;
 
+    let in24hrs = document.createElement("p");
+    in24hrs.setAttribute("class", "in24hrs?");
+    in24hrs.innerText = `${dataObj.in_24_hours}`;
+    in24hrs.style.display = "none";
+
     linkButton.appendChild(button);
     imgContainer.appendChild(img);
 
@@ -129,11 +134,11 @@ let create_appendCard = (dataObj, row, filterClicked) =>
     card.appendChild(start);
     card.appendChild(siteName);
     card.appendChild(linkButton);
+    card.appendChild(in24hrs);
 
     row.appendChild(card);
 
     let site = dataObj.site;;
-
 
     if(site == undefined)
     {
@@ -146,7 +151,7 @@ let create_appendCard = (dataObj, row, filterClicked) =>
                 break;
 
             case "codeforces_gym" : 
-                card.style.backgroundColor = "paleblue";
+                card.style.backgroundColor = "aquamarine";
                 siteName.innerText = "CodeForces::Gym"
                 break;
 
@@ -185,7 +190,6 @@ let create_appendCard = (dataObj, row, filterClicked) =>
                 siteName.innerText = "LeetCode"
                 break;
         }
-        
     }
     else
     {
@@ -197,7 +201,7 @@ let create_appendCard = (dataObj, row, filterClicked) =>
                 break;
 
             case "CodeForces::Gym" : 
-                card.style.backgroundColor = "paleblue";
+                card.style.backgroundColor = "aquamarine";
                 break;
 
             case "CodeForces" : 
@@ -305,7 +309,7 @@ let showPage = (atPage) =>
     let pages = document.getElementsByClassName("page");
     atPage -= 1;    // atPage = atPage - 1 , in order to match the index in object `pages`
 
-    for( let i = 0; i < pages.length; i++)
+    for(let i = 0; i < pages.length; i++)
     {
         if(i === atPage)
         {
@@ -363,6 +367,9 @@ function removeFilter(event)
     {
         filter.parentElement.getElementsByTagName("button")[0].remove();
         filter.parentElement.getElementsByTagName("p")[0].innerText = "None";
+
+        APIurl = "https://kontests.net/api/v1/all";
+        execute_main();
     }
     else
     {
@@ -370,7 +377,7 @@ function removeFilter(event)
     }
 }
 
-function filterClickHandler(event)
+async function filterClickHandler(event)
 {
     let filtersBox = document.getElementsByClassName("filtersBox")[0];
     let selectedFilterName = event.target.getAttribute("name");
@@ -413,8 +420,37 @@ function filterClickHandler(event)
 
     cancel.addEventListener("click", removeFilter);
 
-    APIurl = `https://kontests.net/api/v1/${event.target.id}`;    
-    execute_main(event.target);
+    if(selectedFilterName == "Within 24 hours")
+    {
+        let cards = document.getElementsByClassName("card");
+        let countNotIn24 = 0;
+
+        if(cards.length != 0)
+        {
+            Array.from(cards).forEach( (card) =>
+            {
+                let in24 = card.getElementsByClassName("in24hrs?")[0];
+
+                if(in24.innerText == "No")
+                {
+                    card.style.visibility = "hidden";
+                    ++countNotIn24;
+                }
+            });
+
+            if(countNotIn24 == cards.length)
+            {
+                await replaceAlert("Sorry but there are no competitions happening within the next 24 hours.");
+            }
+            console.log(countNotIn24);
+            console.log(cards.length);
+        }
+    }
+    else
+    {
+        APIurl = `https://kontests.net/api/v1/${event.target.id}`;    
+        execute_main(event.target);
+    }
 }
 
 let applyFilters = () =>
@@ -456,7 +492,7 @@ let execute_main = async (filterClicked) =>
     pageNum=0;
     count=0;
 
-    // hideAll();
+    hideAll();
 
     const data = await recieveData();
 
@@ -488,7 +524,10 @@ let execute_main = async (filterClicked) =>
         if(filters.length === 1)
         {
             filters[0].getElementsByTagName("p")[0].innerText = "None";
-            filters[0].getElementsByTagName("button")[0].remove();
+            filters[0].getElementsByTagName("button")[0].remove();   
+            
+            APIurl = "https://kontests.net/api/v1/all";
+            execute_main();
         }
         else
         {
@@ -500,6 +539,8 @@ let execute_main = async (filterClicked) =>
 
         return;
     }
+
+    applyFilters();
 
     setPage(footer, atPage);
 
@@ -514,8 +555,6 @@ let execute_main = async (filterClicked) =>
         let elem = event.target;
         atPage = setPage(footer, ++atPage);
     });
-
-    applyFilters();
 }
 
 execute_main();

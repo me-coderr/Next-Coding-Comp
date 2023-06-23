@@ -498,15 +498,6 @@ let execute_main = async (filterClicked) =>
 
     const data = await recieveData();
 
-    cardNum=0;
-    rowNum=0;
-    pageNum=0;
-    count=0;
-
-    hideAll();
-
-    const data = await recieveData();
-
     let atPage = 1;
     let card;
     let row;

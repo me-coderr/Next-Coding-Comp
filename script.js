@@ -486,6 +486,17 @@ let execute_main = async (filterClicked) =>
 {
     let footer = document.getElementsByTagName("footer")[0];
     let box = document.getElementById("card-box");
+    
+    footer.style.visibility = "hidden";
+
+    cardNum=0;
+    rowNum=0;
+    pageNum=0;
+    count=0;
+
+    hideAll();
+
+    const data = await recieveData();
 
     cardNum=0;
     rowNum=0;

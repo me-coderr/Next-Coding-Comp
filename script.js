@@ -1,19 +1,12 @@
 
 /**
- * to update :
- * Filters:
- * By default, no filters are applied
- * When a filter type is selected, the filter selected is shown on the applied filter box
- * the cards of previous filters are shifted and new filter cards are shown in the beginning(if filters are already selected, if no filters are selected 
- * then all the previous cards will be hidden and only the new cards will be visible.
+ * 
  */
 
 let APIurl = "https://kontests.net/api/v1/all";
 
 let cardNum;
-let rowNum;
-let pageNum;
-let count;
+let atPage;
 
 let replaceAlert = (text) => {
     return new Promise((resolve, reject) => {
@@ -48,15 +41,12 @@ let replaceAlert = (text) => {
             resolve("Clicked outside alert box");
         });
     });
-};
+}
 
 let displayErrorMessage = async (err) => 
 {
-    // let displayBox = document.getElementsByClassName("sectionName")[0];
-    // displayBox.innerText = `:(`;
     await replaceAlert(err);
 }
-
 
 let recieveData = async () =>
 {
@@ -72,7 +62,7 @@ let recieveData = async () =>
         response = await fetch(request);
         if(response.ok != true || response.status < 200 || response.status > 299)
         {
-            await displayErrorMessage("We are having some Server side issues. Sorry for the inconvinience.")
+            await displayErrorMessage(`We are having some Server side issues. Sorry for the inconvinience. Status code : ${response.status}`)
         }
         else
         {
@@ -86,14 +76,15 @@ let recieveData = async () =>
     }
 }
 
-let create_appendCard = (dataObj, row, filterClicked) => 
+let create_appendCard = (dataObj, cardContainer) =>
 {
     let card = document.createElement("div");
     card.setAttribute("class", "card");
-    card.setAttribute("id", `card-${pageNum}-${rowNum}-${++cardNum}`);
+    card.setAttribute("id", `card-${++cardNum}`);
+    card.setAttribute("data-toShow", "Yes");
 
     let imgContainer = document.createElement("div");
-    imgContainer.setAttribute("class", "img-container")
+    imgContainer.setAttribute("class", "img-container");
 
     let img = document.createElement("img");
     img.setAttribute("src", "https://img.freepik.com/premium-vector/web-development-coding-programming-futuristic-banner-computer-code-laptop_3482-5582.jpg");
@@ -136,212 +127,98 @@ let create_appendCard = (dataObj, row, filterClicked) =>
     card.appendChild(linkButton);
     card.appendChild(in24hrs);
 
-    row.appendChild(card);
+    cardContainer.appendChild(card);
 
     let site = dataObj.site;;
 
-    if(site == undefined)
+    switch(site)
     {
-        site = filterClicked.id;
-        switch(site)
-        {
-            case "codeforces" : 
-                card.style.backgroundColor = "lightgray";
-                siteName.innerText = "CodeForces"
-                break;
+        
+        case "CodeForces" : 
+            card.style.backgroundColor = "lightgray";
+            break;
 
-            case "codeforces_gym" : 
-                card.style.backgroundColor = "aquamarine";
-                siteName.innerText = "CodeForces::Gym"
-                break;
+        case "CodeForces::Gym" : 
+            card.style.backgroundColor = "aquamarine";
+            break;
 
-            case "top_coder" : 
-                card.style.backgroundColor = "beige";
-                siteName.innerText = "TopCoder"
-                break;
+        case "CodeForces" : 
+            card.style.backgroundColor = "mintgreen";
+            break;
 
-            case "at_coder" : 
-                card.style.backgroundColor = "lightyellow";
-                siteName.innerText = "AtCoder"
-                break;
+        case "TopCoder" : 
+            card.style.backgroundColor = "beige";
+            break;
 
-            case "cs_academy" : 
-                card.style.backgroundColor = "lightpink";
-                siteName.innerText = "CS Academy"
-                break;
+        case "AtCoder" : 
+            card.style.backgroundColor = "lightyellow";
+            break;
 
-            case "code_chef" : 
-                card.style.backgroundColor = "lightcoral";
-                siteName.innerText = "CodeChef"
-                break;
+        case "CS Academy" : 
+            card.style.backgroundColor = "lightpink";
+            break;
 
-            case "hacker_rank" : 
-                card.style.backgroundColor = "lavender";
-                siteName.innerText = "HackerRank"
-                break;
+        case "CodeChef" : 
+            card.style.backgroundColor = "lightcoral";
+            break;
 
-            case "hacker_earth" : 
-                card.style.backgroundColor = "palegreen";
-                siteName.innerText = "HackerEarth"
-                break;
+        case "HackerRank" : 
+            card.style.backgroundColor = "lavender";
+            break;
 
-            case "leet_code" : 
-                card.style.backgroundColor = "lightskyblue";
-                siteName.innerText = "LeetCode"
-                break;
-        }
-    }
-    else
-    {
-        switch(site)
-        {
-            
-            case "CodeForces" : 
-                card.style.backgroundColor = "lightgray";
-                break;
+        case "HackerEarth" : 
+            card.style.backgroundColor = "palegreen";
+            break;
 
-            case "CodeForces::Gym" : 
-                card.style.backgroundColor = "aquamarine";
-                break;
-
-            case "CodeForces" : 
-                card.style.backgroundColor = "mintgreen";
-                break;
-
-            case "TopCoder" : 
-                card.style.backgroundColor = "beige";
-                break;
-
-            case "AtCoder" : 
-                card.style.backgroundColor = "lightyellow";
-                break;
-
-            case "CS Academy" : 
-                card.style.backgroundColor = "lightpink";
-                break;
-
-            case "CodeChef" : 
-                card.style.backgroundColor = "lightcoral";
-                break;
-
-            case "HackerRank" : 
-                card.style.backgroundColor = "lavender";
-                break;
-
-            case "HackerEarth" : 
-                card.style.backgroundColor = "palegreen";
-                break;
-
-            case "LeetCode" : 
-                card.style.backgroundColor = "lightskyblue";
-                break;
-            
-            case "Toph" : 
-                card.style.backgroundColor = "softpeach";
-                break;
-        }
-    }
+        case "LeetCode" : 
+            card.style.backgroundColor = "lightskyblue";
+            break;
+        
+        case "Toph" : 
+            card.style.backgroundColor = "softpeach";
+            break;
+    };
+    
     return card;
 }
 
-let create_appendRow = (page) =>
+let showPage = (atPage, cards) =>
 {
-    let cardRow = document.createElement("div");
-    cardRow.setAttribute("class", "card-row");
-    cardRow.setAttribute("id", `row-${pageNum}-${++rowNum}`);
-    cardRow.style.display="flex";
-    cardRow.style.flexDirection="row";
+    let allCards = document.getElementsByClassName("card");
 
-    page.appendChild(cardRow);
+    let startingCardNum = (atPage - 1)*9 + 1;
+    let endingCardNum = atPage*9;
 
-    return cardRow;
-}
-
-let select_createRow = (page) => 
-{
-    let row;
-    let rowList = page.getElementsByClassName("card-row");
-    
-    if(cardNum === 3 || cardNum === 0)
+    Array.from(cards).forEach((card) =>
     {
-        cardNum = 0;
-        row = create_appendRow(page);
-    }
-    else
+        card.setAttribute("data-toShow", "Yes");
+    });
+
+    Array.from(allCards).forEach((card) =>
     {
-        row = rowList[rowNum-1];
-    }
+        card.style.display = "none";
+    });
 
-    return row;
-}
-
-let create_appendPage = (box) =>
-{
-    let page = document.createElement("div");
-    page.setAttribute("class", "page");
-    page.setAttribute("id", `page-${++pageNum}`);
-
-    box.appendChild(page);
-
-    return page;
-}
-
-let select_createPage = (box) =>
-{
-    let page;
-
-    // if((cardNum === 2 && rowNum === 3) || (cardNum === 0 && rowNum === 0))
-    if((rowNum === 0 && cardNum === 0) || (rowNum === 3 && cardNum === 3))
+    for(let i = startingCardNum-1; i<endingCardNum && i<cards.length; i++)
     {
-        rowNum = 0;
-        page = create_appendPage(box);
-    }
-    else
-    {
-        page = document.getElementById(`page-${pageNum}`);
-    }
-
-    return page;
-}
-
-let showPage = (atPage) =>
-{
-    let pages = document.getElementsByClassName("page");
-    atPage -= 1;    // atPage = atPage - 1 , in order to match the index in object `pages`
-
-    for(let i = 0; i < pages.length; i++)
-    {
-        if(i === atPage)
-        {
-            pages[i].style.display = "block";
-        }
-        else
-        {
-            pages[i].style.display = "none";
-        }
+        let card = cards[i];
+        card.style.display = "flex";
     }
 }
 
-let setPage = (footer, atPage) =>
+let setPage = (footer, atPage, cardsData) =>
 {
-    let lastPageNum = Math.ceil(count/12);
+    let lastPageNum = Math.ceil(cardsData.length/9);
     let pageNumBox = footer.children[1];
 
     if(lastPageNum <= 1)
     {
+        footer.style.visibility = "hidden";
+        showPage(atPage, cardsData);
         return;
     }
 
     footer.style.visibility = "visible";
-
-    // if(atPage < 1)                 // gives circular scrolling effect
-    // {
-    //     atPage = lastPageNum;
-    // }
-    // else if(atPage > lastPageNum)
-    // {
-    //     atPage = 1;
-    // }
     
     if(atPage < 1)              // prevents page backward turn when at first page
     {                           // prevents page forward turn when at last page
@@ -354,34 +231,83 @@ let setPage = (footer, atPage) =>
 
     pageNumBox.innerText = `Page ${atPage}`;
 
-    showPage(atPage);
+    showPage(atPage, cardsData);
 
     return atPage;
 }
 
 function removeFilter(event)
 {
-    filter = event.target.parentElement;
+    let filterToRemove = event.target.parentElement;
+    let filterBox = filterToRemove.parentElement;
+    let filters = filterBox.children;
+    let filterToRemoveName = filterToRemove.getElementsByTagName("p")[0].innerText;
+    let cardsToShow = [];
 
-    if(filter.parentElement.children.length === 1)
+    let allCards = Array.from(document.getElementsByClassName("card"));
+
+    filterToRemove.remove();
+    
+    if(filters.length === 0)
     {
-        filter.parentElement.getElementsByTagName("button")[0].remove();
-        filter.parentElement.getElementsByTagName("p")[0].innerText = "None";
+        let none = document.createElement("div");
+        none.setAttribute("class", "filter");
+        
+        let text = document.createElement("p");
+        text.innerText = "None";
+        
+        none.appendChild(text);
+        filterBox.appendChild(none);
+    }
 
-        APIurl = "https://kontests.net/api/v1/all";
-        execute_main();
+    let selectedCards = allCards.filter((card) =>
+    {
+        return card.getAttribute("data-toShow") === "Yes";
+    });
+
+    allCards.forEach((card) =>
+    {
+        card.setAttribute("data-toShow", "No");
+    });
+    
+    if(filters.length === 1 && filters[0].getElementsByTagName("p")[0].innerText === "None")
+    {
+        cardsToShow = allCards;
     }
     else
     {
-        filter.remove();
+        if(filterToRemoveName === "Within 24 hours")
+        {
+            Array.from(filters).forEach((filter) =>
+            {
+                let selectedFilterName = filter.getElementsByTagName("p")[0].innerText;
+
+                let temp = allCards.filter((card) =>
+                {
+                    return card.getElementsByClassName("siteName")[0].innerText === selectedFilterName;
+                });
+
+                cardsToShow = cardsToShow.concat(temp);
+            });
+        }
+        else
+        {
+            cardsToShow = selectedCards.filter((card) =>
+            {
+                return !(card.getElementsByClassName("siteName")[0].innerText === filterToRemoveName);
+            });
+        }
     }
+
+    atPage = 1;
+    setPage(document.getElementsByTagName("footer")[0], atPage, cardsToShow);
 }
 
 async function filterClickHandler(event)
 {
-    let filtersBox = document.getElementsByClassName("filtersBox")[0];
+    let filterBox = document.querySelector(".filtersBox");
     let selectedFilterName = event.target.getAttribute("name");
-    let appliedFilters = filtersBox.children;
+    let appliedFilters = filterBox.children;
     let filterAlreadyApplied = false;
 
     if(appliedFilters.length === 1 && appliedFilters[0].getElementsByTagName("p")[0].innerText == "None")
@@ -392,7 +318,7 @@ async function filterClickHandler(event)
     {
         Array.from(appliedFilters).forEach((filter) =>
         {
-            if(filter.children[0].innerText == selectedFilterName)
+            if(filter.getElementsByTagName("p")[0].innerText == selectedFilterName)
             {
                 filterAlreadyApplied = true;
             }
@@ -414,50 +340,98 @@ async function filterClickHandler(event)
     cancel.setAttribute("class", "cancelFilter");
     cancel.innerText = "×";
 
-    filtersBox.appendChild(selectedFilter);
+    filterBox.appendChild(selectedFilter);
     selectedFilter.appendChild(text);
     selectedFilter.appendChild(cancel);
 
-    cancel.addEventListener("click", removeFilter);
+    cancel.addEventListener("click", removeFilter);             // added eventlistener to cancel filter button.
+
+    let allCards = document.getElementsByClassName("card");
+
+    let cards = Array.from(allCards).filter((card) =>
+    {
+        return card.getAttribute("data-toShow") === "Yes";
+    });
+
+    Array.from(allCards).forEach((card) =>
+    {
+        card.setAttribute("data-toShow", "No");
+    });
+
+    let filteredCards;
 
     if(selectedFilterName == "Within 24 hours")
     {
-        let cards = document.getElementsByClassName("card");
-        let countNotIn24 = 0;
-
-        if(cards.length != 0)
+        filteredCards = Array.from(cards).filter((card) =>
         {
-            Array.from(cards).forEach( (card) =>
-            {
-                let in24 = card.getElementsByClassName("in24hrs?")[0];
+            return card.getElementsByClassName("in24hrs?")[0].innerText === "Yes";
+        });
 
-                if(in24.innerText == "No")
-                {
-                    card.style.visibility = "hidden";
-                    ++countNotIn24;
-                }
-            });
-
-            if(countNotIn24 == cards.length)
-            {
-                await replaceAlert("Sorry but there are no competitions happening within the next 24 hours.");
-            }
-            console.log(countNotIn24);
-            console.log(cards.length);
+        if(filteredCards.length === 0)
+        {
+            await replaceAlert("Sorry but there are no competitions happening within the next 24 hours.");
         }
     }
     else
     {
-        APIurl = `https://kontests.net/api/v1/${event.target.id}`;    
-        execute_main(event.target);
+        allCards = Array.from(allCards);
+        filteredCards = [];
+
+        Array.from([...appliedFilters]).reverse().forEach((filter) =>
+        {
+            selectedFilterName = filter.getElementsByTagName("p")[0].innerText;
+
+            let temp = allCards.filter((card) =>
+            {
+                return card.getElementsByClassName("siteName")[0].innerText === selectedFilterName;
+            });
+
+            filteredCards = filteredCards.concat(temp);
+        });
+        
+        if(filteredCards.length === 0)
+        {
+            await replaceAlert("Sorry but there are no competitions happening under this category set.");
+        }
+        else
+        {
+            let within24AlreadyApplied = false;
+
+            Array.from(appliedFilters).forEach((filter) =>
+            {
+                if(filter.getElementsByTagName("p")[0].innerText === "Within 24 hours")
+                {
+                    within24AlreadyApplied = true;
+                }
+            });
+
+            if(within24AlreadyApplied === true)
+            {
+                let filteredFromFilteredCards = Array.from(filteredCards).filter((card) =>
+                {
+                    return card.getElementsByClassName("in24hrs?")[0].innerText === "Yes";
+                });
+
+                if(filteredFromFilteredCards.length === 0)
+                {
+                    await replaceAlert("Sorry but there are no competitions happening within the next 24 hours under this category.");
+                }
+                else
+                {
+                    filteredCards = filteredFromFilteredCards;
+                }
+            }
+        }
     }
+    atPage = 1;
+    setPage(document.getElementsByTagName("footer")[0], atPage, filteredCards);
 }
 
 let applyFilters = () =>
 {
-    let availableFilters = document.getElementsByClassName("filterType");
+    let availableFilters = document.querySelectorAll(".filterType");
 
-    Array.from(availableFilters).forEach((filter) => 
+    Array.from(availableFilters).forEach((filter) =>
     {
         filter.addEventListener("click", filterClickHandler);
 
@@ -472,90 +446,50 @@ let applyFilters = () =>
     });
 }
 
-let hideAll = () =>
+let execute_main = async () => 
 {
-    let cardPages = document.getElementsByClassName("page");
+    let data = await recieveData();
 
-    Array.from(cardPages).forEach((page) =>
+    const finalData = Array.from(data).filter((dataObj) =>
     {
-        page.remove();
+        return dataObj.status === "BEFORE";
     });
-}
 
-let execute_main = async (filterClicked) => 
-{
     let footer = document.getElementsByTagName("footer")[0];
     let box = document.getElementById("card-box");
-    
-    footer.style.visibility = "hidden";
 
     cardNum=0;
-    rowNum=0;
-    pageNum=0;
-    count=0;
+    atPage = 1;
 
-    hideAll();
-
-    const data = await recieveData();
-
-    let atPage = 1;
-    let card;
-    let row;
-    let page;
-
-    for(i in data)
+    finalData.forEach((dataObj) =>
     {
-        if(data[i].status === "CODING")
-        {
-            continue;
-        }
+        create_appendCard(dataObj, box);
+    });
 
-        count++;
+    let allCards = document.getElementsByClassName("card");
 
-        page = select_createPage(box);
-        row = select_createRow(page);
-        card = create_appendCard(data[i], row, filterClicked);
-    }
+    applyFilters(finalData);
 
-    if(count === 0)
-    {
-        await replaceAlert("For the time-being, there are no contests under the category : <br>" + filterClicked.getAttribute("name"));
-
-        filters = document.getElementsByClassName("filter");
-
-        if(filters.length === 1)
-        {
-            filters[0].getElementsByTagName("p")[0].innerText = "None";
-            filters[0].getElementsByTagName("button")[0].remove();   
-            
-            APIurl = "https://kontests.net/api/v1/all";
-            execute_main();
-        }
-        else
-        {
-            let lastFilter = filters[filters.length -1];
-            lastFilter.remove();
-        }
-
-        setPage(footer, atPage);
-
-        return;
-    }
-
-    applyFilters();
-
-    setPage(footer, atPage);
+    setPage(footer, atPage, allCards);
 
     document.getElementById("pageBackward").addEventListener("click", (event) => 
     {
-        let elem = event.target;
-        atPage = setPage(footer, --atPage);
+        let data = Array.from(allCards).filter((card) =>
+        {
+            return card.getAttribute("data-toShow") === "Yes";
+        });
+
+        atPage = setPage(footer, --atPage, data);
     });
 
     document.getElementById("pageForward").addEventListener("click", (event) => 
     {
-        let elem = event.target;
-        atPage = setPage(footer, ++atPage);
+        let data = Array.from(allCards).filter((card) =>
+        {
+            return card.getAttribute("data-toShow") === "Yes";
+        });
+
+        atPage = setPage(footer, ++atPage, data);
     });
 }
 

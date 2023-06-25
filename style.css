@@ -75,7 +75,7 @@ main{
 }
 
 .filtersBox{
-    width: 80%;
+    width: 100%;
     margin: 10px;
     margin-bottom: 40px;
     background-color: orange;
@@ -111,11 +111,15 @@ main{
 }
 
 .cardContainer{
-    display: flex;
-    flex-direction: column;
+    /* display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: center; */
     width: 60%;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 20px;
 }
 
 .page{
@@ -132,7 +136,7 @@ main{
 }
 
 .card{
-    width: 29.5%;
+    width: 97%;
     padding: 5px;
     padding-top: 0;
     display: flex;
